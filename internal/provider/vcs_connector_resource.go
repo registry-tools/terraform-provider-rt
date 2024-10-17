@@ -100,7 +100,12 @@ func (r *VCSConnectorResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 
-	token := data.GitHub.Attributes()["token"].(types.String).ValueString()
+	tokenAsString, ok := data.GitHub.Attributes()["token"].(types.String)
+	if !ok {
+		resp.Diagnostics.AddAttributeError(path.Root("github").AtName("token"), "Attribute type error", fmt.Sprintf("Expected string, got %T", data.GitHub.Attributes()["token"]))
+		return
+	}
+	token := tokenAsString.ValueString()
 
 	newGitHubConnector := api.NewVcsConnectorsPostRequestBody_githubConnector()
 	newGitHubConnector.SetDescription(data.Description.ValueStringPointer())

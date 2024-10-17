@@ -274,9 +274,10 @@ func (r *TerraformTokenResource) Delete(ctx context.Context, req resource.Delete
 	err = r.client.Api().ServiceAccounts().ByServiceAccountId(privateData.ServiceAccountID).Delete(ctx, nil)
 	if err != nil && !IsNotFoundError(err) {
 		// Warn about the service account not being deleted
-		apiErrors := err.(*models.Errors)
-		for _, err := range apiErrors.GetErrors() {
-			resp.Diagnostics.AddWarning("Service account resource could not be deleted", fmt.Sprintf("The autenticaton token was deleted, but the associated service account could not be deleted: %s: %s", *err.GetTitle(), *err.GetDetail()))
+		if apiErrors, ok := err.(*models.Errors); ok {
+			for _, err := range apiErrors.GetErrors() {
+				resp.Diagnostics.AddWarning("Service account resource could not be deleted", fmt.Sprintf("The autenticaton token was deleted, but the associated service account could not be deleted: %s: %s", *err.GetTitle(), *err.GetDetail()))
+			}
 		}
 	}
 }
