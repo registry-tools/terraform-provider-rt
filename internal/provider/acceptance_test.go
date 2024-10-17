@@ -19,7 +19,7 @@ import (
 func TestAccRTProvider(t *testing.T) {
 	rand := time.Now().UnixNano()
 
-	githubToken := os.Getenv("GITHUB_TOKEN_TESTING")
+	githubToken := os.Getenv("TESTING_GITHUB_TOKEN")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },

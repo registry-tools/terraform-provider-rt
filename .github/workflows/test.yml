@@ -83,7 +83,7 @@ jobs:
       - run: go mod download
       - env:
           TF_ACC: "1"
-          GITHUB_TOKEN_TESTING: ${{ secrets.GITHUB_TOKEN_TESTING }}
+          TESTING_GITHUB_TOKEN: ${{ secrets.TESTING_GITHUB_TOKEN }}
           REGISTRY_TOOLS_HOSTNAME: "registrytools.cloud"
           REGISTRY_TOOLS_CLIENT_ID: ${{ secrets.REGISTRY_TOOLS_CLIENT_ID }}
           REGISTRY_TOOLS_CLIENT_SECRET: ${{ secrets.REGISTRY_TOOLS_CLIENT_SECRET }}

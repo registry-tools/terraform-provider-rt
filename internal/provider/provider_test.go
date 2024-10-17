@@ -24,7 +24,7 @@ func testAccPreCheck(t *testing.T) {
 		t.Fatal("REGISTRY_TOOLS_HOSTNAME must be set for acceptance tests")
 	}
 
-	if os.Getenv("GITHUB_TOKEN_TESTING") == "" {
-		t.Fatal("GITHUB_TOKEN_TESTING must be set for acceptance tests")
+	if os.Getenv("TESTING_GITHUB_TOKEN") == "" {
+		t.Fatal("TESTING_GITHUB_TOKEN must be set for acceptance tests")
 	}
 }
