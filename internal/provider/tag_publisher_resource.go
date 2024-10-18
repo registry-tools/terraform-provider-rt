@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	sdk "github.com/registry-tools/rt-sdk"
-	"github.com/registry-tools/rt-sdk/generated/api"
 	"github.com/registry-tools/rt-sdk/generated/models"
 )
 
@@ -109,15 +108,12 @@ func (r *TagPublisherResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 
-	newTagPublisher := api.NewNamespacesItemTagPublishersPostRequestBody_tagPublisher()
+	newTagPublisher := models.NewTagPublisher()
 	newTagPublisher.SetVcsConnectorId(data.VCSConnectorID.ValueStringPointer())
 	newTagPublisher.SetRepo(data.RepoIdentifier.ValueStringPointer())
 	newTagPublisher.SetBackfillPattern(data.BackfillPattern.ValueStringPointer())
 
-	newTagPublisherBody := api.NewNamespacesItemTagPublishersPostRequestBody()
-	newTagPublisherBody.SetTagPublisher(newTagPublisher)
-
-	tagPublisher, err := r.client.Api().Namespaces().ByNamespaceId(data.NamespaceID.ValueString()).TagPublishers().PostAsTagPublishersPostResponse(ctx, newTagPublisherBody, nil)
+	tagPublisher, err := r.client.Api().Namespaces().ByNamespaceId(data.NamespaceID.ValueString()).TagPublishers().PostAsTagPublishersPostResponse(ctx, newTagPublisher, nil)
 	if err != nil {
 		APIErrorsAsDiagnostics(err, &resp.Diagnostics)
 		return

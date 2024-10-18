@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	sdk "github.com/registry-tools/rt-sdk"
-	"github.com/registry-tools/rt-sdk/generated/api"
 	"github.com/registry-tools/rt-sdk/generated/models"
 )
 
@@ -107,14 +106,13 @@ func (r *VCSConnectorResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	token := tokenAsString.ValueString()
 
-	newGitHubConnector := api.NewVcsConnectorsPostRequestBody_githubConnector()
+	github := "github"
+	newGitHubConnector := models.NewVCSConnector()
 	newGitHubConnector.SetDescription(data.Description.ValueStringPointer())
 	newGitHubConnector.SetToken(&token)
+	newGitHubConnector.SetProvider(&github)
 
-	newVCSConnectorBody := api.NewVcsConnectorsPostRequestBody()
-	newVCSConnectorBody.SetGithubConnector(newGitHubConnector)
-
-	vcsConnector, err := r.client.Api().VcsConnectors().PostAsVcsConnectorsPostResponse(ctx, newVCSConnectorBody, nil)
+	vcsConnector, err := r.client.Api().VcsConnectors().PostAsVcsConnectorsPostResponse(ctx, newGitHubConnector, nil)
 	if err != nil {
 		APIErrorsAsDiagnostics(err, &resp.Diagnostics)
 		return

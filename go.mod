@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/terraform-plugin-framework v1.11.0
 	github.com/hashicorp/terraform-plugin-go v0.23.0
 	github.com/hashicorp/terraform-plugin-testing v1.10.0
-	github.com/registry-tools/rt-sdk v0.0.0-20241017130526-4e04e9a50d51
+	github.com/registry-tools/rt-sdk v0.0.0-20241018032220-ddaf2285da4f
 )
 
 require (

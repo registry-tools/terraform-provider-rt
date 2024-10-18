@@ -14,7 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	sdk "github.com/registry-tools/rt-sdk"
-	"github.com/registry-tools/rt-sdk/generated/api"
 	"github.com/registry-tools/rt-sdk/generated/models"
 )
 
@@ -132,10 +131,7 @@ func (r *TerraformTokenResource) Create(ctx context.Context, req resource.Create
 	newSA.SetName(&name)
 	newSA.SetRole(data.Role.ValueStringPointer())
 
-	newSABody := api.NewNamespacesItemServiceAccountsPostRequestBody()
-	newSABody.SetServiceAccount(newSA)
-
-	sa, err := r.client.Api().Namespaces().ByNamespaceId(data.NamespaceID.ValueString()).ServiceAccounts().PostAsServiceAccountsPostResponse(ctx, newSABody, nil)
+	sa, err := r.client.Api().Namespaces().ByNamespaceId(data.NamespaceID.ValueString()).ServiceAccounts().PostAsServiceAccountsPostResponse(ctx, newSA, nil)
 	if err != nil {
 		APIErrorsAsDiagnostics(err, &resp.Diagnostics)
 		return
@@ -143,17 +139,14 @@ func (r *TerraformTokenResource) Create(ctx context.Context, req resource.Create
 
 	saID := sa.GetData().GetId()
 
-	newAuthItem := api.NewServiceAccountsItemAuthenticationTokensPostRequestBody_authenticationToken()
-	newAuthItem.SetDescription(data.Description.ValueStringPointer())
+	newAuthToken := models.NewAuthenticationToken()
+	newAuthToken.SetDescription(data.Description.ValueStringPointer())
 
 	if data.ExpiresIn.ValueString() != "never" {
-		newAuthItem.SetExpiresAfter(data.ExpiresIn.ValueStringPointer())
+		newAuthToken.SetExpiresAfter(data.ExpiresIn.ValueStringPointer())
 	}
 
-	newAuthBody := api.NewServiceAccountsItemAuthenticationTokensPostRequestBody()
-	newAuthBody.SetAuthenticationToken(newAuthItem)
-
-	token, err := r.client.Api().ServiceAccounts().ByServiceAccountId(*saID).AuthenticationTokens().PostAsAuthenticationTokensPostResponse(ctx, newAuthBody, nil)
+	token, err := r.client.Api().ServiceAccounts().ByServiceAccountId(*saID).AuthenticationTokens().PostAsAuthenticationTokensPostResponse(ctx, newAuthToken, nil)
 	if err != nil {
 		APIErrorsAsDiagnostics(err, &resp.Diagnostics)
 		return

@@ -106,10 +106,7 @@ func (r *NamespaceResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	newNamespace.SetDescription(&description)
 
-	newNamespaceBody := api.NewNamespacesPostRequestBody()
-	newNamespaceBody.SetNamespace(newNamespace)
-
-	namespace, err := r.client.Api().Namespaces().PostAsNamespacesPostResponse(ctx, newNamespaceBody, nil)
+	namespace, err := r.client.Api().Namespaces().PostAsNamespacesPostResponse(ctx, newNamespace, nil)
 	if err != nil {
 		APIErrorsAsDiagnostics(err, &resp.Diagnostics)
 		return
